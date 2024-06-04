@@ -1,0 +1,2 @@
+SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+SetEnvIf X-Forwarded-For "^(.*\..*\..*\..*)$" realip=$1

@@ -1,0 +1,65 @@
+<?php
+require_once "../classes/autoload.php";
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    die("POST REQUIRED");
+}
+function getRealIpAddr() {
+    if (!empty($_SERVER['realip'])) {
+        $ip = $_SERVER['realip'];
+    } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        // Check IP from shared internet
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // Check IP from proxy
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } elseif (!empty($_SERVER['HTTP_X_REAL_IP'])) {
+        // Check IP from nginx
+        $ip = $_SERVER['HTTP_X_REAL_IP'];
+    } else {
+        // Default to REMOTE_ADDR
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+try {
+
+    $pdo = DbConfig::getInstance();
+}
+catch (PDOException $exception)
+{
+    die($exception->getMessage());
+}
+
+$fio    = htmlspecialchars( trim($_POST['fio']) );
+$phone  = htmlspecialchars( trim($_POST['phone']) );
+
+$ip = getRealIpAddr();
+
+if(empty($fio))
+{
+    die("FIO is required");
+}
+if(empty($phone))
+{
+    die("FIO phone required");
+}
+
+$sql = "INSERT INTO clients(fio,phone,ipaddress) 
+VALUES(
+       :fio,
+       :phone,
+       :ipaddress
+)";
+$c_iq = $pdo->getConnection()->prepare($sql);
+$c_iq->bindParam(':fio', $fio);
+$c_iq->bindParam(':phone', $phone);
+$c_iq->bindParam(':ipaddress', $ip);
+
+$result = $c_iq->execute();
+
+if(!$result){
+    die(json_encode($c_iq->errorInfo()));
+}
+
+echo "OK";
+
