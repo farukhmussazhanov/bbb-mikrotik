@@ -31,7 +31,6 @@ COPY . /var/www/html
 # Указываем рабочую директорию
 WORKDIR /var/www/html
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-#COPY php.ini /usr/local/etc/php/php.ini
-#RUN service apache2 restart
+RUN service apache2 restart
 
 EXPOSE 80

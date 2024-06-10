@@ -65,9 +65,6 @@
                         <h5 class="card-title fw-bold">Для подключения к сети необходимо отправить свои данные </h5>
                         <form action="" id="data-submit">
                         </form>
-                        <pre>
-                            <?= var_export($_SERVER,true)?>
-                        </pre>
                         <div class="card-content d-flex flex-column gap mt-5 mb-5">
                             <div class="input-group flex-nowrap ">
                                 <span class="input-group-text fw-bold text-white bg-yellow-orange border-0" id="addon-wrapping"><i class="fa-solid fa-user"></i></span>
@@ -78,7 +75,12 @@
                                 <input form="data-submit" name="phone" required type="text" class="form-control border-0 phone" placeholder="+7 (777) 777 77 77" aria-label="phone" aria-describedby="addon-wrapping">
                             </div>
                             <div class="input-group flex-nowrap ">
-                                <button form="data-submit" class="btn btn-orange">Отправить</button>
+                                <button form="data-submit" id="submit-btn" class="btn btn-orange d-flex justify-content-center align-items-center">
+                                    <span id="btn-content">Отправить</span>
+                                    <span id="spinner">
+                                        <div class="loader"></div>
+                                    </span>
+                                </button>
                             </div>
                         </div>
                     </div>

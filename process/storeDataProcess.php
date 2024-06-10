@@ -3,6 +3,10 @@ require_once "../classes/autoload.php";
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     die("POST REQUIRED");
 }
+$response = [
+    "success" => true,
+    "message" => false,
+];
 function getRealIpAddr() {
     if (!empty($_SERVER['realip'])) {
         $ip = $_SERVER['realip'];
@@ -22,12 +26,14 @@ function getRealIpAddr() {
     return $ip;
 }
 try {
-
     $pdo = DbConfig::getInstance();
 }
 catch (PDOException $exception)
 {
-    die($exception->getMessage());
+    $response['success'] = false;
+    $response['message'] = $exception->getMessage();
+    echo json_encode($response);
+    exit;
 }
 
 $fio    = htmlspecialchars( trim($_POST['fio']) );
@@ -37,11 +43,17 @@ $ip = getRealIpAddr();
 
 if(empty($fio))
 {
-    die("FIO is required");
+    $response['success'] = false;
+    $response['message'] = "FIO is required";
+    echo json_encode($response);
+    exit;
 }
 if(empty($phone))
 {
-    die("FIO phone required");
+    $response['success'] = false;
+    $response['message'] = "Phone required";
+    echo json_encode($response);
+    exit;
 }
 
 $sql = "INSERT INTO clients(fio,phone,ipaddress) 
@@ -58,8 +70,10 @@ $c_iq->bindParam(':ipaddress', $ip);
 $result = $c_iq->execute();
 
 if(!$result){
-    die(json_encode($c_iq->errorInfo()));
+    $response['success'] = false;
+    $response['message'] = $c_iq->errorInfo();
+    echo json_encode($response);
 }
-
-echo "OK";
+$response["message"] = "Success";
+echo json_encode($response);
 
