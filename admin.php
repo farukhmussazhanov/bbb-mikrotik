@@ -81,41 +81,54 @@ if(!Auth::checkAuth()){
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="v-pills-slider" role="tabpanel" aria-labelledby="v-pills-slider-tab">
-                                <h2 class="card-title">Настройки слайдера</h2>
-                                <div id="success-message" style="display: none">
-                                    <div class="alert alert-success" role="alert">
-                                       Файл успешно загружен!
-                                    </div>
-                                </div>
-                                <div id="error-message" style="display: none">
-                                    <div class="alert alert-danger" role="alert">
-                                       Ошибка при загрузке файла!
-                                    </div>
-                                </div>
-                                <form action="" id="slider-form"></form>
-                                <div class="d-flex gap-2">
-                                    <div style="flex-grow: 3">
-                                        <input form="slider-form" type="file" id="file" accept="image/*" class="form-control" >
-                                    </div>
-                                    <div style="flex-grow: 1">
-                                        <button form="slider-form" class="btn btn-orange d-flex justify-content-center align-items-center" id="submit-btn">
-                                            <span id="btn-content">Загрузить</span>
-                                            <span id="spinner">
-                                                <div class="loader"></div>
-                                            </span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <h2 class="card-title">Предпросмотр</h2>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-4"></div>
-                                        <div class="col-md-4">
-                                            <div id="preview">
-                                                <?php include "templates/slider.php"?>
+                                <div class="d-flex gap-5 flex-column">
+                                    <div>
+                                        <h2 class="card-title">Настройки слайдера</h2>
+                                        <div id="success-message" style="display: none">
+                                            <div class="alert alert-success" role="alert">
+                                                Файл успешно загружен!
                                             </div>
                                         </div>
-                                        <div class="col-md-4"></div>
+                                        <div id="error-message" style="display: none">
+                                            <div class="alert alert-danger" role="alert">
+                                                Ошибка при загрузке файла!
+                                            </div>
+                                        </div>
+                                        <form action="" id="slider-form"></form>
+                                        <div class="d-flex gap-2">
+                                            <div style="flex-grow: 3">
+                                                <input form="slider-form" type="file" id="file" accept="image/*" class="form-control" >
+                                            </div>
+                                            <div style="flex-grow: 1">
+                                                <button form="slider-form" class="btn btn-orange d-flex justify-content-center align-items-center" id="submit-btn">
+                                                    <span id="btn-content">Загрузить</span>
+                                                    <span id="spinner">
+                                                        <div class="loader"></div>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h2 class="card-title">Список файлов</h2>
+                                        <div class="d-flex gap-3 flex-wrap" id="image-list">
+                                           <?php include("templates/image-list.php")?>
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        <h2 class="card-title">Предпросмотр</h2>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4"></div>
+                                                <div class="col-md-4">
+                                                    <div id="preview">
+                                                        <?php include "templates/slider.php"?>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -131,6 +144,53 @@ if(!Auth::checkAuth()){
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/fontawesonme/all.js"></script>
 <script src="js/datatables.min.js"></script>
+<script>
+    function removeItem(id){
+        let formData = new FormData();
+        formData.append('id', id);
+        let btn = $("[data-btn-remove-"+id+"]")
+        let spinner = $("[data-spinner-"+id+"]")
+        let btnContent = $("[data-btn-remove-content-"+id+"]")
+        let card = $("[data-image-key-"+id+"]")
+        let errorMessage = $("[data-error-message-"+id+"]")
+        $.ajax({
+            url: 'process/removeFileProcess.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: () => {
+                btn.attr("disabled",true);
+                spinner.show();
+                btnContent.hide();
+            },
+            success: function(response) {
+                if(response.success !== undefined && response.success){
+                    btn.removeAttr("disabled");
+                    spinner.hide();
+                    btnContent.show();
+                    getPreview();
+                    card.fadeOut();
+                    setTimeout(()=>{
+                        card.remove();
+                    },2000)
+                }else {
+                    btn.removeAttr("disabled");
+                    spinner.hide();
+                    btnContent.show();
+                    errorMessage.fadeIn();
+                    setTimeout(()=>{
+                        errorMessage.fadeOut();
+                    },2000)
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Image upload failed. Status: ' + textStatus);
+            }
+        });
+    }
+</script>
 <script>
     const table = new DataTable('#table',{
         ajax: 'process/DataTable/server_processing.php',
@@ -148,7 +208,21 @@ if(!Auth::checkAuth()){
     });
 </script>
 <script>
-    const getPreview = ()=>{
+    const getImageList = () => {
+        $.ajax({
+            url: 'templates/image-list.php', // Укажите URL вашей PHP-страницы
+            type: 'GET', // Метод запроса (GET, POST и т. д.)
+            dataType: 'html', // Ожидаемый тип данных (html, json, xml и т. д.)
+            success: function(response) {
+                $("#image-list").html(response)
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // Обработка ошибки
+                console.error('Произошла ошибка:', textStatus, errorThrown);
+            }
+        });
+    }
+    function getPreview (){
         $.ajax({
             url: 'templates/slider.php', // Укажите URL вашей PHP-страницы
             type: 'GET', // Метод запроса (GET, POST и т. д.)
@@ -194,6 +268,7 @@ if(!Auth::checkAuth()){
                             $("#success-message").fadeOut();
                         },2000)
                         getPreview();
+                        getImageList();
                     }else {
                         $("#submit-btn").removeAttr("disabled");
                         $("#spinner").hide();
