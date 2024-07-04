@@ -33,7 +33,8 @@ $columns = [
     ['db' => 'fio',         'dt' => 1],
     ['db' => 'phone',       'dt' => 2],
     ['db' => 'ipaddress',   'dt' => 3],
-    ['db' => 'created_at',  'dt' => 4],
+    ['db' => 'mac',   'dt' => 4],
+    ['db' => 'created_at',  'dt' => 5],
 ];
 
 // SQL server connection information

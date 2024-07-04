@@ -1,8 +1,12 @@
 <?php
 require_once "../classes/autoload.php";
+header('Access-Control-Allow-Origin: *');
+
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     die("POST REQUIRED");
 }
+//echo "<pre>".var_export($_POST,true)."</pre>";
+//die();
 $response = [
     "success" => true,
     "message" => false,
@@ -39,7 +43,7 @@ catch (PDOException $exception)
 $fio    = htmlspecialchars( trim($_POST['fio']) );
 $phone  = htmlspecialchars( trim($_POST['phone']) );
 
-$ip = getRealIpAddr();
+//$ip = getRealIpAddr();
 
 if(empty($fio))
 {
@@ -55,17 +59,26 @@ if(empty($phone))
     echo json_encode($response);
     exit;
 }
+$mac            = htmlspecialchars($_POST['mac']);
+$ip             = htmlspecialchars($_POST['ip']);
+//$username       = htmlspecialchars($_POST['username']);
+//$password       = htmlspecialchars($_POST['password']);
+$linkLogin      = htmlspecialchars($_POST['link-login']);
+$linkOrig       = htmlspecialchars($_POST['link-orig']);
 
-$sql = "INSERT INTO clients(fio,phone,ipaddress) 
+
+$sql = "INSERT INTO clients(fio,phone,ipaddress,mac) 
 VALUES(
        :fio,
        :phone,
-       :ipaddress
+       :ipaddress,
+       :mac
 )";
 $c_iq = $pdo->getConnection()->prepare($sql);
 $c_iq->bindParam(':fio', $fio);
 $c_iq->bindParam(':phone', $phone);
 $c_iq->bindParam(':ipaddress', $ip);
+$c_iq->bindParam(':mac', $mac);
 
 $result = $c_iq->execute();
 
@@ -74,6 +87,14 @@ if(!$result){
     $response['message'] = $c_iq->errorInfo();
     echo json_encode($response);
 }
+MikrotikRequest::make($linkLogin,[
+    'mac' => $mac,
+    'ip' => $mac,
+//    'username' => $username,
+//    'password' => $password,
+    'link-login' => $linkLogin,
+    'link-orig' => $linkOrig
+]);
 $response["message"] = "Success";
 echo json_encode($response);
 

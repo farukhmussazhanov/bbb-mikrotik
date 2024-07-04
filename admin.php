@@ -43,14 +43,14 @@ if(!Auth::checkAuth()){
                             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                                 <button class="nav-link active" id="v-pills-clients-tab" data-bs-toggle="pill" data-bs-target="#v-pills-clients" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Список клиентов</button>
                                 <button class="nav-link" id="v-pills-slider-tab" data-bs-toggle="pill" data-bs-target="#v-pills-slider" type="button" role="tab" aria-controls="v-pills-slider" aria-selected="false">Настройки слайдера</button>
-                                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
-                                <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
+<!--                                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>-->
+<!--                                <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>-->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-10 mt-1">
+            <div class="col-md-9 mt-1">
                <div class="card">
                     <div class="card-body">
                         <div class="tab-content" id="v-pills-tabContent">
@@ -63,6 +63,7 @@ if(!Auth::checkAuth()){
                                         <th>ФИО</th>
                                         <th>Телефон</th>
                                         <th>IP address</th>
+                                        <th>Mac address</th>
                                         <th>Дата создания</th>
                                     </tr>
                                     </thead>
@@ -75,6 +76,7 @@ if(!Auth::checkAuth()){
                                         <th>ФИО</th>
                                         <th>Телефон</th>
                                         <th>IP address</th>
+                                        <th>Mac address</th>
                                         <th>Дата создания</th>
                                     </tr>
                                     </tfoot>
