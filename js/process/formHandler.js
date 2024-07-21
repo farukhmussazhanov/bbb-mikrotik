@@ -20,14 +20,14 @@ $("#data-submit").on('submit',(e)=>{
         },
         success: (response)=>{
             if(response.success !== undefined && response.success){
-                alert("OK")
+                window.location.replace(`${response.mikrot.link_login}?link-orig=${response.mikrot.link_orig}&username=admin&password=&dst=https://blabla.bar/`)
             }
             else{
                 alert("not ok")
             }
         },
         error:(error)=>{
-            console.error(error);
+            $("#res").html(error);
             $("#submit-btn").removeAttr("disabled");
         }
     });

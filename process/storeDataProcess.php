@@ -61,10 +61,7 @@ if(empty($phone))
 }
 $mac            = htmlspecialchars($_POST['mac']);
 $ip             = htmlspecialchars($_POST['ip']);
-//$username       = htmlspecialchars($_POST['username']);
-//$password       = htmlspecialchars($_POST['password']);
-$linkLogin      = htmlspecialchars($_POST['link-login']);
-$linkOrig       = htmlspecialchars($_POST['link-orig']);
+$linkLogin      = htmlspecialchars($_POST['login']);
 
 
 $sql = "INSERT INTO clients(fio,phone,ipaddress,mac) 
@@ -87,14 +84,20 @@ if(!$result){
     $response['message'] = $c_iq->errorInfo();
     echo json_encode($response);
 }
-MikrotikRequest::make($linkLogin,[
+$response['mikrot'] = [
     'mac' => $mac,
-    'ip' => $mac,
+    'ip' => $ip,
+    'link_login' => $linkLogin,
+    'link_orig' => "https://blabla.bar/"
+];
+/*MikrotikRequest::make($linkLogin,[
+    'mac' => $mac,
+    'ip' => $ip,
 //    'username' => $username,
 //    'password' => $password,
     'link-login' => $linkLogin,
-    'link-orig' => $linkOrig
-]);
+    'link-orig' => "https://blabla.bar/"
+]);*/
 $response["message"] = "Success";
 echo json_encode($response);
 

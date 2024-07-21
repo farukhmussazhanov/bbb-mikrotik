@@ -37,8 +37,17 @@
             <div class="col">
                 <div class="card border-radius-25 bg-blue fw-bold text-white p-2">
                     <div class="card-body">
+                        <!--<pre>
+                            <?/*=var_export($_REQUEST,true)*/?>
+                        </pre>
+                        <div id="res">
+
+                        </div>-->
                         <h5 class="card-title fw-bold">Для подключения к сети необходимо отправить свои данные </h5>
                         <form action="" id="data-submit">
+                            <input type="hidden" name="mac" value="<?=$_GET['userMac']?>">
+                            <input type="hidden" name="ip" value="<?=$_GET['clientIp']?>">
+                            <input type="hidden" name="login" value="<?=$_GET['loginUrl']?>">
                         </form>
                         <div class="card-content d-flex flex-column gap mt-5 mb-5">
                             <div class="input-group flex-nowrap ">
